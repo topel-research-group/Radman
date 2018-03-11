@@ -53,7 +53,7 @@ def main():
 	for line in data.readlines():
 		if first_line:
 			for locus_name in line.split(","):
-				# Some locus names are inheriting its name from the previous column
+				# Every second locus is inheriting its name from the previous column
 				if locus_name != " ":
 					name = locus_name
 					sufix = "_a"
