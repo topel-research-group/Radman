@@ -54,10 +54,14 @@ def main():
 		# The first line contains the locus names
 		if first_line:
 			for locus_name in line.split(","):
+				# The last column has no name but includes a new line character
+				locus_name = locus_name.rstrip("\n")
 				# Every second locus is inheriting its name from the previous column
 				if locus_name != " ":
 					name = locus_name
 					sufix = "_a"
+#				if locus_name == " \n":
+#					sufix = "_b"
 				else:
 					sufix = "_b"
 				locus_name = name + sufix
