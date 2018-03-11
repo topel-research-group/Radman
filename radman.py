@@ -51,6 +51,7 @@ def main():
 	first_line = True
 	locus_names = []
 	for line in data.readlines():
+		# The first line contains the locus names
 		if first_line:
 			for locus_name in line.split(","):
 				# Every second locus is inheriting its name from the previous column
@@ -58,7 +59,6 @@ def main():
 					name = locus_name
 					sufix = "_a"
 				else:
-					name = name
 					sufix = "_b"
 				locus_name = name + sufix
 				# Skip first column
