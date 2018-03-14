@@ -34,7 +34,7 @@ class Individual(object):
 		return het_loci
 
 	def get_state(self, locus_number):
-		return self.het_states[locus_number]
+		return int(self.het_states[locus_number])
 
 	def __str__(self):
 		return self.name
@@ -60,8 +60,6 @@ def main():
 				if locus_name != " ":
 					name = locus_name
 					sufix = "_a"
-#				if locus_name == " \n":
-#					sufix = "_b"
 				else:
 					sufix = "_b"
 				locus_name = name + sufix
@@ -72,7 +70,6 @@ def main():
 					locus_names.append(locus_name)
 			first_line = False
 		else:
-			# 'het' for heterozygosity state 
 			individual = True
 			het_states = []
 			for het in line.split(","):
@@ -85,19 +82,27 @@ def main():
 			individuals.append(Individual(individual_name, locus_names, het_states))
 
 
-	print(locus_names)
+#	print(locus_names)
 #	print(het_states)
 #	for ind in individuals:
 #		print(ind, ind.get_het_locus())
 #	print(individuals)
 
-#	locus_number = 0
-#	for locus in locus_names:
-#		print(locus)
-#		state = individuals[locus_number].get_state(locus_number)
-#		if int(state) == "2":
-#			print(state)
-#		locus_number += 1
+	locus_number = 0
+	for locus in locus_names:
+		no_data = 0
+		hom = 0
+		het = 0
+		for individual in individuals:
+			state = individuals[locus_number].get_state(locus_number)
+			if state == 0:
+				no_data += 1
+			if state == 1:
+				hom += 1
+			if state == 2:
+				het += 1
+		locus_number += 1
+		print(locus, no_data, hom, het)
 
 if __name__ == "__main__":
     main()
