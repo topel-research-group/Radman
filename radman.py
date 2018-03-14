@@ -6,6 +6,7 @@
 
 import sys
 import argparse
+import numpy as np
 
 parser = argparse.ArgumentParser(prog=sys.argv[0], description="ADD A DESCRIPTION OF YOUR PROGRAM HERE.")
 parser.add_argument(dest="input_file", help="Input file")
