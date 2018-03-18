@@ -47,10 +47,9 @@ def main():
 	individuals = []
 
 	# Generate a list of Locus names
-	# and subsequently store the data from
-	# each individual in an object.
 	first_line = True
 	locus_names = []
+	matrix_list = []
 	for line in data.readlines():
 		# The first line contains the locus names
 		if first_line:
@@ -69,25 +68,21 @@ def main():
 					pass
 				else:
 					locus_names.append(locus_name)
+			matrix_list.append(locus_names)
+#			print(matrix_list) 
 			first_line = False
+		# Subsequent lines contains the locus data from each individual.
 		else:
-			individual = True
-			het_states = []
-			for het in line.split(","):
-				if individual:
-					individual_name = het
-					individual = False
-				else:
-					het_states.append(het)
-			# Store each individual in a list
-			individuals.append(Individual(individual_name, locus_names, het_states))
+			new_line = []
+			for state in line.split(","):
+				new_line.append(state)
+			matrix_list.append(new_line)
+
+	matrix = np.array(matrix_list)
+	print(matrix[2][2]) 
 
 
-#	print(locus_names)
-#	print(het_states)
-#	for ind in individuals:
-#		print(ind, ind.get_het_locus())
-#	print(individuals)
+
 
 	locus_number = 0
 	for locus in locus_names:
@@ -103,7 +98,7 @@ def main():
 			if state == 2:
 				het += 1
 		locus_number += 1
-		print(locus, no_data, hom, het)
+#		print(locus, no_data, hom, het)
 
 if __name__ == "__main__":
     main()
