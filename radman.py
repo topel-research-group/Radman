@@ -9,8 +9,11 @@ import argparse
 import numpy as np
 
 parser = argparse.ArgumentParser(prog=sys.argv[0], description="ADD A DESCRIPTION OF YOUR PROGRAM HERE.")
+zygosity_group = parser.add_mutually_exclusive_group(required=True)
 parser.add_argument(dest="input_file", help="Input file")
-parser.add_argument("--het_loci", help="Outputs the names of the heerozygous sites for each individual")
+zygosity_group.add_argument("--hom", help="Outputs the number of homozygous samples for each loci", action="store_true")
+zygosity_group.add_argument("--het", help="Outputs the number of heterozygous samples for each loci", action="store_true")
+zygosity_group.add_argument("--unknown", help="Outputs the number of samples with unknown zygosity for each loci", action="store_true")
 parser.add_argument("-v", "--verbose", action="store_true", help="Be more verbose")
 args = parser.parse_args()
 
@@ -66,60 +69,48 @@ def main():
 				else:
 					sufix = "_b"
 				locus_name = name + sufix
-				# Skip first column
+#				# Skip first column
 #				if locus_name == "_a":
 #					pass
 #				else:
 #					locus_names.append(locus_name)
 				matrix_list.append(locus_name)
 				dim1 = len(matrix_list)
-#			matrix_list.append(locus_names)
 			first_line = False
 		# Subsequent lines contains the locus data from each individual.
 		else:
 			for x in line.split(","):
-				matrix_list.append(x)
+				matrix_list.append(x.rstrip())
 
 
 	dim2 = int(len(matrix_list) / dim1)
-#			new_line = []
-#			for state in line.split(","):
-#				new_line.append(state)
-#			matrix_list.append(new_line)
-
-#	matrix = np.arange(len(matrix_list)).reshape(dim1, dim2)
 	matrix = np.array(matrix_list).reshape(dim2, dim1)
-	print(matrix) 
 
-	for row in matrix:
-		print(row)
-
+	# Analyse the loci
+	first_column = True
 	for column in matrix.T:
-		print(column)
+		state = {"0":0, "1":0, "2":0}
+		loci = None
+		# Skip first column with sample names
+		if first_column:
+			first_column = False
+			pass
+		else:
+			for x in column:
+				if not loci:
+					loci = x
+				else:
+					state[x] += 1
 
-#	for row in matrix:
-#		print(row)
+		if args.het and loci:
+			print(loci, state["2"])
+		elif args.hom and loci:
+			print(loci, state["1"])
+		elif args.unknown and loci:
+			print(loci, state["0"])
+			
 
-#	print(matrix.shape)
-
-#	locus_number = 0
-#	for x in np.nditer(matrix):
-#		print(x)
-#		for (x,y), value in numpy.ndenumerate(a):
-#		print(matrix[0][x])
-#		no_data = 0
-#		hom = 0
-#		het = 0
-#		for individual in individuals:
-#			state = individuals[locus_number].get_state(locus_number)
-#			if state == 0:
-#				no_data += 1
-#			if state == 1:
-#				hom += 1
-#			if state == 2:
-#				het += 1
-#		locus_number += 1
-#		print(locus, no_data, hom, het)
+			
 
 if __name__ == "__main__":
     main()
