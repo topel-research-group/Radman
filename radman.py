@@ -15,6 +15,7 @@ parser.add_argument("-v", "--verbose", action="store_true", help="Be more verbos
 args = parser.parse_args()
 
 class Individual(object):
+	### NOT IN USE ###
 	def __init__(self, name, locus_names, het_states):
 		self.name = name
 		self.locus_names = locus_names
@@ -42,7 +43,9 @@ class Individual(object):
 
 
 def main():
-	
+
+	### Read in the data and stor it in an array ###
+
 	data = open(args.input_file)
 	individuals = []
 
@@ -64,40 +67,58 @@ def main():
 					sufix = "_b"
 				locus_name = name + sufix
 				# Skip first column
-				if locus_name == "_a":
-					pass
-				else:
-					locus_names.append(locus_name)
-			matrix_list.append(locus_names)
-#			print(matrix_list) 
+#				if locus_name == "_a":
+#					pass
+#				else:
+#					locus_names.append(locus_name)
+				matrix_list.append(locus_name)
+				dim1 = len(matrix_list)
+#			matrix_list.append(locus_names)
 			first_line = False
 		# Subsequent lines contains the locus data from each individual.
 		else:
-			new_line = []
-			for state in line.split(","):
-				new_line.append(state)
-			matrix_list.append(new_line)
-
-	matrix = np.array(matrix_list)
-	print(matrix[2][2]) 
+			for x in line.split(","):
+				matrix_list.append(x)
 
 
+	dim2 = int(len(matrix_list) / dim1)
+#			new_line = []
+#			for state in line.split(","):
+#				new_line.append(state)
+#			matrix_list.append(new_line)
 
+#	matrix = np.arange(len(matrix_list)).reshape(dim1, dim2)
+	matrix = np.array(matrix_list).reshape(dim2, dim1)
+	print(matrix) 
 
-	locus_number = 0
-	for locus in locus_names:
-		no_data = 0
-		hom = 0
-		het = 0
-		for individual in individuals:
-			state = individuals[locus_number].get_state(locus_number)
-			if state == 0:
-				no_data += 1
-			if state == 1:
-				hom += 1
-			if state == 2:
-				het += 1
-		locus_number += 1
+	for row in matrix:
+		print(row)
+
+	for column in matrix.T:
+		print(column)
+
+#	for row in matrix:
+#		print(row)
+
+#	print(matrix.shape)
+
+#	locus_number = 0
+#	for x in np.nditer(matrix):
+#		print(x)
+#		for (x,y), value in numpy.ndenumerate(a):
+#		print(matrix[0][x])
+#		no_data = 0
+#		hom = 0
+#		het = 0
+#		for individual in individuals:
+#			state = individuals[locus_number].get_state(locus_number)
+#			if state == 0:
+#				no_data += 1
+#			if state == 1:
+#				hom += 1
+#			if state == 2:
+#				het += 1
+#		locus_number += 1
 #		print(locus, no_data, hom, het)
 
 if __name__ == "__main__":
